@@ -2,6 +2,8 @@ import type { RouteObject } from "react-router";
 import RootInjector from "../layout/RootInjector";
 import Root from "../layout/Root";
 import DrugsList from "../screens/DrugsList";
+import Login from "../screens/Login";
+
 
 export const routes: RouteObject[] = [
   {
@@ -15,6 +17,10 @@ export const routes: RouteObject[] = [
           {
             index: true,
             Component: DrugsList
+          },
+          {
+            path: "login",
+            Component: Login,
           },
         ],
       },

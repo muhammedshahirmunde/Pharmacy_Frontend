@@ -31,7 +31,7 @@ const mockDrugs = [
 const AvailabilityChip = ({ quantity } : {quantity : number}) => {
   if(quantity > 0)
   return <Chip size='small' label='In stock' color='success' />;
-
+  
   return <Chip size='small' label = 'Out of stock' color='warning'/>
 };
 

@@ -85,9 +85,6 @@ const Drugs = ({type}: {type : string}) => {
         <Button variant="contained" startIcon={<AddIcon />} onClick={addDrug}>
           Add Drug
         </Button>
-        <Button variant="outlined" startIcon={<RefreshIcon />}>
-          Refresh
-        </Button>
       </Stack>
 
       <TableContainer component={Paper}>
@@ -100,6 +97,7 @@ const Drugs = ({type}: {type : string}) => {
               <TableCell>Price</TableCell>
               {type === 'all_drugs' && <TableCell>Availability</TableCell>}
               <TableCell>Quantity</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -113,6 +111,12 @@ const Drugs = ({type}: {type : string}) => {
                   <AvailabilityChip quantity={drug.qty}/>
                 </TableCell>}
                 <TableCell>{drug.qty}</TableCell>
+                <TableCell>
+                  <div className="flex justify-between">
+                  <Button variant='contained'>Edit</Button>
+                  <Button variant='outlined'>Dispense</Button>
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

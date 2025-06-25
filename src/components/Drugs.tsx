@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   Button,
   Container,
-  IconButton,
   InputAdornment,
   Stack,
   TextField,
@@ -14,13 +13,16 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Chip
+  Chip,
+  IconButton,
+  Tooltip
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import AddIcon from "@mui/icons-material/Add";
-import DrugModal from "../components/DrugModal";
 import {type Drug} from "../types/type"
 import DispenseModal from "../components/DispenseModal";
+import { Add as AddIcon, Edit as EditIcon } from '@mui/icons-material';
+import DrugModal from "./DrugModal";
+
 
 
 const mockDrugs = [

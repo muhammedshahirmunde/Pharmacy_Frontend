@@ -2,14 +2,15 @@ import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: import.meta.env.REACT_APP_API_BASE_URL, // Set your API base URL in .env
+  baseURL: import.meta.env.VITE_API_BASE_URL, // Set your API base URL in .env
   timeout: 10000,
 });
 
 // Request Interceptor
 api.interceptors.request.use(
   (config: AxiosRequestConfig) => {
-    const token = localStorage.getItem('authToken'); // Or use a context/store
+    const userData = localStorage.getItem('user'); // Or use a context/store
+    const token  = userData?.token
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }

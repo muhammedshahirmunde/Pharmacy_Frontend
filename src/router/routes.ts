@@ -17,13 +17,13 @@ export const routes: RouteObject[] = [
           {
             index: true,
             Component: DrugsList
-          },
-          {
-            path: "login",
-            Component: Login,
-          },
+          }
         ],
       },
+      {
+            path: "login",
+            Component: Login,
+          }
     ],
   },
 ];

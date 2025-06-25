@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router";
 import {emailSchema} from "../validation/Validation"
 import { useFormik } from "formik";
-import {loginUser} from "../services/authService"
+import { loginUser } from "../services/authService"
 
 function Login() {
     const navigate = useNavigate()

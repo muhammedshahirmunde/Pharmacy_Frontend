@@ -14,11 +14,12 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Chip
+  Chip,
+  IconButton,
+  Tooltip
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import AddIcon from "@mui/icons-material/Add";
-import RefreshIcon from "@mui/icons-material/Refresh";
+import { Add as AddIcon, Edit as EditIcon } from '@mui/icons-material';
 import DrugModal from "../components/DrugModal";
 
 

@@ -192,19 +192,4 @@ function DrugModal({ isVisible, onClose }: DrugModalProps) {
   );
 }
 
-export default DrugModal;
-=======
-      console.log(values)
-    },
-  });
-
-  return (
-    <form className="max-w-sm mx-auto" onSubmit={formik.handleSubmit}>
-      <div className="mb-5">
-        <label
-          htmlFor="name"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          Name
-        </label>
-        <input
+export default DrugModal

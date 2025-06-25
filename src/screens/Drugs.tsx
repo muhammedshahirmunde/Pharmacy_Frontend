@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Container,
@@ -21,8 +21,6 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { Add as AddIcon, Edit as EditIcon } from '@mui/icons-material';
 import DrugModal from "../components/DrugModal";
-
-
 
 
 

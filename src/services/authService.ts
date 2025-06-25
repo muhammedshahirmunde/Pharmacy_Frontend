@@ -1,6 +1,8 @@
+const baseUrl = import.meta.env.VITE_BASE_URL
+
 export const loginUser = async (email: string, password: string) => {
   try {
-    const res = await fetch(`172.20.10.13:3000/api/auth/login`, {
+    const res = await fetch(`${baseUrl}/api/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

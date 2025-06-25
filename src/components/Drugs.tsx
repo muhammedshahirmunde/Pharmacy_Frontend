@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   Button,
   Container,
-  IconButton,
   InputAdornment,
   Stack,
   TextField,
@@ -20,7 +19,7 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Add as AddIcon, Edit as EditIcon } from '@mui/icons-material';
-import DrugModal from "../components/DrugModal";
+import DrugModal from "./DrugModal";
 
 
 

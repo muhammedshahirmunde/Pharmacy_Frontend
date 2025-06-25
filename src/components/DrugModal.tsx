@@ -1,7 +1,16 @@
 import { useFormik } from "formik";
 import { addDrugSchema } from "../validation/Validation";
 
-function DrugForm() {
+interface DrugModalProps {
+  isVisible : boolean
+  onClose : (value : boolean) => void
+}
+
+function DrugModal({isVisible, onClose} : DrugModalProps) {
+
+  console.log('HI there', isVisible, 'and', onClose);
+  
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -161,4 +170,4 @@ function DrugForm() {
   );
 }
 
-export default DrugForm;
+export default DrugModal;

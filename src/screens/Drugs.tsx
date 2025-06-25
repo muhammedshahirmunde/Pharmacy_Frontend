@@ -19,13 +19,14 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import DrugModal from "../components/DrugModal";
-
+import {type Drug} from "../types/type"
+import DispenseModal from "../components/DispenseModal";
 
 
 const mockDrugs = [
-  { id: 1, name: "Paracetamol", category: "Tablet", price : 350, qty: 0 },
-  { id: 2, name: "Paracetamol", category: "Tablet", price : 350, qty: 30 },
-  { id: 3, name: "Paracetamol", category: "Tablet", price : 350, qty: 30 }
+  { id: 1, name: "Paracetamol", category: "Tablet", price : 350, qty: 0, lowStockThreshold: 10 },
+  { id: 2, name: "Paracetamol", category: "Tablet", price : 350, qty: 30, lowStockThreshold: 10},
+  { id: 3, name: "Paracetamol", category: "Tablet", price : 350, qty: 30, lowStockThreshold: 10}
 ];
 
 
@@ -36,15 +37,23 @@ const AvailabilityChip = ({ quantity } : {quantity : number}) => {
   return <Chip size='small' label = 'Out of stock' color='warning'/>
 };
 
+
 const Drugs = ({type}: {type : string}) => {
   const [search, setSearch] = useState("");
   const [isAddingDrug, setIsAddingDrug] = useState<boolean>(false)
+  const [selectDrug, setSelectedDrug] = useState<Drug | null>(null)
+  const [isDispensing, setIsDispensing] = useState<boolean>(false)
 
   useEffect(() => {
 
   }, [])
 
   const addDrug = () => {
+    setIsAddingDrug(true)
+  }
+
+  const handleEditDrug = (drug: Drug) => {
+    setSelectedDrug(drug)
     setIsAddingDrug(true)
   }
 
@@ -110,8 +119,8 @@ const Drugs = ({type}: {type : string}) => {
                 <TableCell>{drug.qty}</TableCell>
                 <TableCell>
                   <div className="flex justify-between">
-                  <Button variant='contained'>Edit</Button>
-                  <Button variant='outlined'>Dispense</Button>
+                  <Button variant='contained' onClick={() => handleEditDrug(drug)}>Edit</Button>
+                  <Button variant='outlined' onClick={() => setIsDispensing(true)}>Dispense</Button>
                   </div>
                 </TableCell>
               </TableRow>
@@ -119,7 +128,8 @@ const Drugs = ({type}: {type : string}) => {
           </TableBody>
         </Table>
       </TableContainer>
-    <DrugModal isVisible = {isAddingDrug} onClose = {setIsAddingDrug}/>
+    <DrugModal isVisible = {isAddingDrug} onClose = {setIsAddingDrug} drugToEdit={selectDrug}/>
+    <DispenseModal isVisible = {isDispensing} onClose = {setIsDispensing}/>
     </Container>
   );
 };

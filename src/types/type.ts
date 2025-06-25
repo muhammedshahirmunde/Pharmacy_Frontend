@@ -15,5 +15,6 @@ export interface DispenseModalProps {
 export interface DrugModalProps {
   isVisible: boolean;
   onClose: (value: boolean) => void;
-  drugToEdit?: Drug | null
+  drugToEdit?: Drug | null;
+  setSelectedDrug?: null
 }

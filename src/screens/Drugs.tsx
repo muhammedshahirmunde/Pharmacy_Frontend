@@ -48,7 +48,8 @@ const Drugs = ({type}: {type : string}) => {
 
   }, [])
 
-  const addDrug = () => {
+  const handleAddDrug = () => {
+    setSelectedDrug(null);
     setIsAddingDrug(true)
   }
 
@@ -88,7 +89,7 @@ const Drugs = ({type}: {type : string}) => {
           sx={{ flexGrow: 1 }}
         />
 
-        <Button variant="contained" startIcon={<AddIcon />} onClick={addDrug}>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={handleAddDrug}>
           Add Drug
         </Button>
       </Stack>

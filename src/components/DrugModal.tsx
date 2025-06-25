@@ -32,11 +32,12 @@ function DrugModal({ isVisible, onClose, drugToEdit}: DrugModalProps) {
   useEffect(()=> {
     if(drugToEdit) {
       console.log("drugToEdit -",drugToEdit);
-
       formik.setFieldValue("name", drugToEdit.name);
       formik.setFieldValue("category", drugToEdit.category); 
       formik.setFieldValue("price", drugToEdit.price);
       formik.setFieldValue("lowStockThreshold", drugToEdit.lowStockThreshold)
+    }else{
+      formik.resetForm();
     }
   }, [drugToEdit])
 

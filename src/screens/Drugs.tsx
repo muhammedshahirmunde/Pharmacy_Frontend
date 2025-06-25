@@ -19,6 +19,10 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import DrugModal from "../components/DrugModal";
+
+
+
 
 
 const mockDrugs = [
@@ -31,16 +35,21 @@ const mockDrugs = [
 const AvailabilityChip = ({ quantity } : {quantity : number}) => {
   if(quantity > 0)
   return <Chip size='small' label='In stock' color='success' />;
-
+  
   return <Chip size='small' label = 'Out of stock' color='warning'/>
 };
 
 const Drugs = ({type}: {type : string}) => {
   const [search, setSearch] = useState("");
+  const [isAddingDrug, setIsAddingDrug] = useState<boolean>(false)
 
   useEffect(() => {
 
   }, [])
+
+  const addDrug = () => {
+    setIsAddingDrug(true)
+  }
 
   const filteredDrugs = mockDrugs.filter((drug) =>
     drug.name.toLowerCase().includes(search.toLowerCase()) && 
@@ -73,7 +82,7 @@ const Drugs = ({type}: {type : string}) => {
           sx={{ flexGrow: 1 }}
         />
 
-        <Button variant="contained" startIcon={<AddIcon />}>
+        <Button variant="contained" startIcon={<AddIcon />} onClick={addDrug}>
           Add Drug
         </Button>
         <Button variant="outlined" startIcon={<RefreshIcon />}>
@@ -89,7 +98,7 @@ const Drugs = ({type}: {type : string}) => {
               <TableCell>Name</TableCell>
               <TableCell>Category</TableCell>
               <TableCell>Price</TableCell>
-              <TableCell>Availability</TableCell>
+              {type === 'all_drugs' && <TableCell>Availability</TableCell>}
               <TableCell>Quantity</TableCell>
             </TableRow>
           </TableHead>
@@ -100,15 +109,16 @@ const Drugs = ({type}: {type : string}) => {
                 <TableCell>{drug.name}</TableCell>
                 <TableCell>{drug.category}</TableCell>
                 <TableCell>{drug.price}</TableCell>
-                <TableCell>
+                { type === 'all_drugs' && <TableCell>
                   <AvailabilityChip quantity={drug.qty}/>
-                </TableCell>
+                </TableCell>}
                 <TableCell>{drug.qty}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+    <DrugModal isVisible = {isAddingDrug} onClose = {setIsAddingDrug}/>
     </Container>
   );
 };

@@ -21,7 +21,7 @@ export interface DrugModalProps extends DispenseModalProps {
   setDrugList?: React.Dispatch<React.SetStateAction<DrugI[]>>
 }
 
-export type StockModalProps = DispenseModalProps
+// export type StockModalProps = DispenseModalProps
 
 export interface DrugI {
   name: string,
@@ -35,3 +35,28 @@ export interface DrugI {
   updatedAt: string,
   __v: number
 }
+export interface StockModalProps {
+  isVisible: boolean;
+  onClose: (value: boolean) => void;
+  updater : (data : any) => void
+}
+
+export interface StockProps {
+   id: number;
+   name: string;
+   category: string;
+   qty: number;
+   price: number;
+   lowStockThreshold: number;
+   createdAt: string;
+   updatedAt: string;
+}
+
+export interface DispensedProps {
+   id: number;
+   drugId: string;
+   name: string;
+   date: string;
+   qty: number;
+}
+

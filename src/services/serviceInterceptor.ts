@@ -1,15 +1,22 @@
 import axios from "axios";
-import type { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import type {
+  AxiosResponse,
+  AxiosError,
+  InternalAxiosRequestConfig
+} from "axios";
+
+console.log('THE ENV is ', import.meta.env);
+
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL, // Set your API base URL in .env
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 10000,
 });
 
 // Request Interceptor
 api.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     const userDataString = localStorage.getItem("user");
     const userData = userDataString ? JSON.parse(userDataString) : null;
     const token = userData?.token;
@@ -17,6 +24,8 @@ api.interceptors.request.use(
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    console.log('The config is', config);
+    
     return config;
   },
   (error: AxiosError) => {
@@ -32,7 +41,6 @@ api.interceptors.response.use(
       const { status } = error.response;
 
       if (status === 401) {
-        // Handle unauthorized access (e.g., redirect to login)
         console.warn("Unauthorized! Redirecting to login...");
         window.location.href = "/login";
       } else if (status === 403) {

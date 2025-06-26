@@ -12,9 +12,9 @@ export interface DispenseModalProps {
   onClose: (value: boolean) => void;
 }
 
-export interface DrugModalProps {
-  isVisible: boolean;
-  onClose: (value: boolean) => void;
+export interface DrugModalProps extends DispenseModalProps {
   drugToEdit?: Drug | null;
   setSelectedDrug?: null
 }
+
+export type StockModalProps = DispenseModalProps

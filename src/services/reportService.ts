@@ -1,9 +1,9 @@
 import api from "./serviceInterceptor";
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL
+const path = '/reports'
 // Define an empty object
 
 
 export const generateReport = (data) => {
-    return api.post('/drugs', data);
+    return api.post(path, data);
 };

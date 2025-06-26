@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Box,
   FormControl,
@@ -16,52 +16,75 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  Paper
-} from '@mui/material';
-import type { SelectChangeEvent } from '@mui/material';
+  Paper,
+} from "@mui/material";
+import type { SelectChangeEvent } from "@mui/material";
+import { generateReport } from "../services/reportService";
 
-type ReportType = '' | 'lowStock' | 'dispensed';
+type ReportType = "" | "lowStock" | "dispensed";
+
+interface StockProps {
+  id: number;
+  name: string;
+  category: string;
+  qty : number;
+  price: number;
+  lowStockThreshold: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface DispensedProps {
+  id: number;
+  drugId: string;
+  name: string;
+  date: string;
+  qty: number;
+}
 
 const ReportsPage: React.FC = () => {
-  const [reportType, setReportType] = useState<ReportType>('');
-  const [fromDate, setFromDate] = useState<string>('');
-  const [toDate, setToDate] = useState<string>('');
+  const [reportType, setReportType] = useState<ReportType>("");
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
   const [showTable, setShowTable] = useState<boolean>(false);
+  const [tableData, setTableData] = useState<(StockProps | DispensedProps)[]>(
+    []
+  );
 
   const handleReportChange = (event: SelectChangeEvent) => {
     setReportType(event.target.value as ReportType);
-    if(showTable)
-      setShowTable(false)
+    if (showTable) setShowTable(false);
   };
 
   const handleSubmit = async () => {
     try {
       const sendingData = {
-        type : reportType,
+        type: reportType,
         ...(reportType === "dispensed" && {
           fromDate,
-          toDate
-        })
-      }
-      const generated = await reportService.generate(sendingData)
+          toDate,
+        }),
+      };
+      const generated = await generateReport(sendingData);
+      setTableData(generated.data);
+      setShowTable(true);
     } catch (error) {
-      
+      console.log("Error while generating report:", error);
     }
-    setShowTable(true);
   };
 
   return (
     <Box sx={{ p: 4 }}>
-      <Typography variant="h6" className='mb-5' gutterBottom>
+      <Typography variant="h6" className="mb-5" gutterBottom>
         Reports
       </Typography>
 
       <Box
         sx={{
-          display: 'flex',
+          display: "flex",
           gap: 2,
-          alignItems: 'center',
-          flexWrap: 'wrap',
+          alignItems: "center",
+          flexWrap: "wrap",
           mb: 3,
         }}
       >
@@ -78,7 +101,7 @@ const ReportsPage: React.FC = () => {
           </Select>
         </FormControl>
 
-        {reportType === 'dispensed' && (
+        {reportType === "dispensed" && (
           <>
             <TextField
               label="From Date"
@@ -99,37 +122,74 @@ const ReportsPage: React.FC = () => {
 
         <Button
           variant="contained"
-          sx={{ backgroundColor: '#6a1b9a', color: '#fff' }}
+          sx={{ backgroundColor: "#6a1b9a", color: "#fff" }}
           onClick={handleSubmit}
         >
           Generate Report
         </Button>
       </Box>
 
-
       {showTable && (
         <>
-       {reportType === 'lowStock' && <Box>
-         <>
-         <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Quantity</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            
-          </TableBody>
-        </Table>
-      </TableContainer>
-         </>
-        </Box>}
+          {reportType === "lowStock" && (
+            <Box>
+              <>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Sl No</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Category</TableCell>
+                        <TableCell>Price</TableCell>
+                        <TableCell>Quantity</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {tableData.map((drug, index) => (
+                        <TableRow key={drug.id}>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>{drug.name}</TableCell>
+                          {/* <TableCell>{drug.category}</TableCell> */}
+                          {/* <TableCell>{drug.price}</TableCell> */}
+                          <TableCell>{drug.qty}</TableCell>
+
+                          
+                          <TableCell>{drug.qty}</TableCell>
+                          <TableCell>
+                            <div className="flex justify-between">
+                              <Button variant="contained">Edit</Button>
+                              <Button variant="outlined">Dispense</Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </>
+            </Box>
+          )}
+
+          {reportType === "dispensed" && (
+            <Box>
+              <>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>ID</TableCell>
+                        <TableCell>Drug Name</TableCell>
+                        <TableCell>Date</TableCell>\
+                        <TableCell>Quantity</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody></TableBody>
+                  </Table>
+                </TableContainer>
+              </>
+            </Box>
+          )}
         </>
       )}
     </Box>

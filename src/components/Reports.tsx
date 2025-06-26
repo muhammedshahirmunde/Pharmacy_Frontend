@@ -20,34 +20,17 @@ import {
 } from "@mui/material";
 import type { SelectChangeEvent } from "@mui/material";
 import { generateReport } from "../services/reportService";
+import type { DispensedProps, StockProps } from "../types/type";
 
 type ReportType = "" | "lowStock" | "dispensed";
 
-interface StockProps {
-  id: number;
-  name: string;
-  category: string;
-  qty : number;
-  price: number;
-  lowStockThreshold: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface DispensedProps {
-  id: number;
-  drugId: string;
-  name: string;
-  date: string;
-  qty: number;
-}
 
 const ReportsPage: React.FC = () => {
   const [reportType, setReportType] = useState<ReportType>("");
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");
   const [showTable, setShowTable] = useState<boolean>(false);
-  const [tableData, setTableData] = useState<(StockProps | DispensedProps)[]>(
+  const [reports, setReports] = useState<(StockProps | DispensedProps)[]>(
     []
   );
 
@@ -66,7 +49,7 @@ const ReportsPage: React.FC = () => {
         }),
       };
       const generated = await generateReport(sendingData);
-      setTableData(generated.data);
+      setReports(generated.data);
       setShowTable(true);
     } catch (error) {
       console.log("Error while generating report:", error);
@@ -146,15 +129,25 @@ const ReportsPage: React.FC = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {tableData.map((drug, index) => (
+                      {reports.map((drug, index) => (
                         <TableRow key={drug.id}>
                           <TableCell>{index + 1}</TableCell>
                           <TableCell>{drug.name}</TableCell>
-                          {/* <TableCell>{drug.category}</TableCell> */}
-                          {/* <TableCell>{drug.price}</TableCell> */}
+
+                          {"category" in drug ? (
+                            <>
+                              <TableCell>{drug.category}</TableCell>
+                              <TableCell>{drug.price}</TableCell>
+                              {" "}
+                            </>
+                          ) : (
+                            <>
+                            HSdh
+                            </>
+                          )}
+
                           <TableCell>{drug.qty}</TableCell>
 
-                          
                           <TableCell>{drug.qty}</TableCell>
                           <TableCell>
                             <div className="flex justify-between">

@@ -1,9 +1,10 @@
 import api from "./serviceInterceptor";
 // Define an empty object
 
+const basePath = '/drugs'
 
 export const listDrugs = () => {
-  return api.get('http://10.135.69.124:5000/');
+  return api.get(basePath + '/allDrugs');
 };
 
 

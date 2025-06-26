@@ -15,8 +15,8 @@ function Login() {
       const user = await loginUser(values.email, values.password )
       if(user) {
         localStorage.setItem('user', JSON.stringify(user));
+        navigate("/")
       }
-      navigate("/")
     },
   });
 

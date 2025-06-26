@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Container,
@@ -18,49 +18,47 @@ import {
 import SearchIcon from "@mui/icons-material/Search";
 import { Add as AddIcon, Edit as EditIcon } from "@mui/icons-material";
 import StockModal from "./StockModal";
+import { getStocks } from "../services/stockService";
 
-const mockStocks = [
-  {
-    _id: "64a1f2c3e1b1a2b3c4d5e6f9",
-    drugId: "64a1f2c3e1b1a2b3c4d5e6f7",
-    incomingQty: 50,
-    remainingQty: 20,
-    expirationDate: "2026-06-01T00:00:00Z",
-    createdDate: "2025-06-01T10:30:00Z",
-  },
-  {
-    _id: "64a1f2c3e1b1a2b3c4d5e6fa",
-    drugId: "64a1f2c3e1b1a2b3c4d5e6f7",
-    incomingQty: 100,
-    remainingQty: 100,
-    expirationDate: "2026-07-01T00:00:00Z",
-    createdDate: "2025-07-01T09:00:00Z",
-  },
-  {
-    _id: "64a1f2c3e1b1a2b3c4d5e6fb",
-    drugId: "64a1f2c3e1b1a2b3c4d5e6f8",
-    incomingQty: 30,
-    remainingQty: 30,
-    expirationDate: "2026-05-15T00:00:00Z",
-    createdDate: "2025-06-10T11:00:00Z",
-  },
-  {
-    _id: "64a1f2c3e1b1a2b3c4d5e6fc",
-    drugId: "64a1f2c3e1b1a2b3c4d5e6f9",
-    incomingQty: 80,
-    remainingQty: 75,
-    expirationDate: "2026-08-01T00:00:00Z",
-    createdDate: "2025-06-20T15:00:00Z",
-  },
-];
+
+type StockItem = {
+  id : string
+  name : string
+  drugId : string
+  incomingQty : number
+  remainingQty : number
+  expirationDate : string
+  createdDate : string
+}
+
 
 const Stocks = () => {
   const [search, setSearch] = useState("");
   const [isAddingStock, setIsAddingStock] = useState<boolean>(false)
+  const [stocks, setStocks] = useState<StockItem[]>([]);
+
+
+  useEffect(() => {
+    fetchStocks()
+  }, [])
+
+  const fetchStocks = async () => {
+    try {
+      const data = await getStocks()
+      setStocks(data.data)
+    } catch (error) {
+      console.log('Error ', error);
+    }
+  }
 
   const handleAddStock = () => {
     setIsAddingStock(true)
   }
+
+ const addEntry = (data : StockItem) => {
+    setStocks(prev => ([data, ...prev]))
+ }
+
   return (
     <Container maxWidth="lg">
       <Typography variant="h4" gutterBottom mt={4}> Stocks </Typography>
@@ -89,20 +87,33 @@ const Stocks = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
+              <TableCell>Sl No.</TableCell>
               <TableCell>Name</TableCell>
-              <TableCell>Quantity</TableCell>
+              <TableCell>Incoming Qty</TableCell>
+              <TableCell>Remaining Qty</TableCell>
               <TableCell>Expiry Date</TableCell>
               <TableCell>Added Date</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-
+          {stocks.map((stock, index) => <TableRow key={stock.id}>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>{stock.name}</TableCell>
+                          <TableCell>{stock.incomingQty}</TableCell>
+                          <TableCell>{stock.remainingQty}</TableCell>
+                          <TableCell>{stock. expirationDate}</TableCell>
+                          <TableCell>{stock. createdDate}</TableCell>
+                          <TableCell>
+                            <div className="flex justify-between">
+                            <Button variant='outlined' onClick={() => (true)}>Delete</Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>)}
           </TableBody>
         </Table>
       </TableContainer>
-      <StockModal isVisible = {isAddingStock} onClose = {setIsAddingStock}/>
+      <StockModal isVisible = {isAddingStock} onClose = {setIsAddingStock} updater = {addEntry}/>
     </Container>
   );
 };

@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 
 // Create an Axios instance
 const api = axios.create({
@@ -9,8 +9,10 @@ const api = axios.create({
 // Request Interceptor
 api.interceptors.request.use(
   (config: AxiosRequestConfig) => {
-    const userData = localStorage.getItem('user'); // Or use a context/store
-    const token  = userData?.token
+    const userDataString = localStorage.getItem("user");
+    const userData = userDataString ? JSON.parse(userDataString) : null;
+    const token = userData?.token;
+
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -30,17 +32,17 @@ api.interceptors.response.use(
 
       if (status === 401) {
         // Handle unauthorized access (e.g., redirect to login)
-        console.warn('Unauthorized! Redirecting to login...');
-        window.location.href = '/login';
+        console.warn("Unauthorized! Redirecting to login...");
+        window.location.href = "/login";
       } else if (status === 403) {
-        console.error('Forbidden: You do not have access.');
+        console.error("Forbidden: You do not have access.");
       } else if (status >= 500) {
-        console.error('Server error. Please try again later.');
+        console.error("Server error. Please try again later.");
       }
     } else if (error.request) {
-      console.error('No response received from server.');
+      console.error("No response received from server.");
     } else {
-      console.error('Error setting up request:', error.message);
+      console.error("Error setting up request:", error.message);
     }
 
     return Promise.reject(error);

@@ -17,7 +17,7 @@ export const addDrugSchema = yup.object().shape({
     .required("Drug name is required")
     .min(2, "Name must be at least 2 characters"),
   
-  catagory: yup
+  category: yup
     .string()
     .required("Catagory is required"),
 
@@ -37,7 +37,7 @@ export const editDrugSchema = yup.object().shape({
     .string()
     .min(2, "Name must be at least 2 characters"),
   
-  catagory: yup
+  category: yup
     .string(),
 
   price: yup

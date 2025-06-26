@@ -4,9 +4,9 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { addDrugSchema, editDrugSchema } from "../validation/Validation";
 import {type DrugModalProps} from "../types/type"
+import {addDrugs, editDrugs} from "../services/drugService"
 
-
-function DrugModal({ isVisible, onClose, drugToEdit}: DrugModalProps) {
+function DrugModal({ isVisible, onClose, drugToEdit, setDrugList}: DrugModalProps) {
   let drugSchema = undefined
   if(drugToEdit) {
     drugSchema = editDrugSchema
@@ -24,6 +24,22 @@ function DrugModal({ isVisible, onClose, drugToEdit}: DrugModalProps) {
     validationSchema: drugSchema,
     onSubmit: async (values) => {
       console.log(values);
+      if(drugToEdit) {
+        const updatedData = await editDrugs(values, drugToEdit)
+        if (setDrugList) {
+          setDrugList((prev) =>
+            prev ? prev.map((drug) =>
+              drug._id === updatedData._id ? updatedData : drug
+            )
+            : [updatedData]
+          )
+        }
+      } else {
+        const newDrug = await addDrugs(values)
+        if (setDrugList) {
+          setDrugList((prev) => (prev ? [...prev, newDrug] : [newDrug]))
+        }
+      }
       onClose(false);
       formik.resetForm();
     },
@@ -97,8 +113,8 @@ function DrugModal({ isVisible, onClose, drugToEdit}: DrugModalProps) {
             </label>
             <input
               type="text"
-              id="catagory"
-              name="catagory"
+              id="category"
+              name="category"
               value={formik.values.category}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}

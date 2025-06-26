@@ -1,8 +1,9 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
+import axios from "axios";
+import type { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 
 // Create an Axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL, // Set your API base URL in .env
+  baseURL: import.meta.env.VITE_BASE_URL, // Set your API base URL in .env
   timeout: 10000,
 });
 

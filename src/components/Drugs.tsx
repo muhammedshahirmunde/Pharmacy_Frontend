@@ -14,22 +14,14 @@ import {
   TableRow,
   Paper,
   Chip,
-  IconButton,
-  Tooltip
+  IconButton
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import {type Drug} from "../types/type"
+import type { Drug, DrugI } from "../types/type";
 import DispenseModal from "../components/DispenseModal";
-import { Add as AddIcon, Edit as EditIcon } from '@mui/icons-material';
+import { Add as AddIcon } from '@mui/icons-material';
 import DrugModal from "./DrugModal";
-
-
-
-const mockDrugs = [
-  { id: 1, name: "Paracetamol", category: "Tablet", price : 350, qty: 0, lowStockThreshold: 10 },
-  { id: 2, name: "Paracetamol", category: "Tablet", price : 350, qty: 30, lowStockThreshold: 10},
-  { id: 3, name: "Paracetamol", category: "Tablet", price : 350, qty: 30, lowStockThreshold: 10}
-];
+import {listDrugs} from "../services/drugService"
 
 
 const AvailabilityChip = ({ quantity } : {quantity : number}) => {
@@ -45,9 +37,19 @@ const Drugs = ({type}: {type : string}) => {
   const [isAddingDrug, setIsAddingDrug] = useState<boolean>(false)
   const [selectDrug, setSelectedDrug] = useState<Drug | null>(null)
   const [isDispensing, setIsDispensing] = useState<boolean>(false)
+  const [drugList, setDrugList] = useState<DrugI[]>([])
 
   useEffect(() => {
-
+    async function detchDrugList() {
+      try {
+        const fetchedDrugList= await listDrugs()
+        setDrugList(fetchedDrugList?.drugs || [])
+      } catch (error) {
+        console.error(error)
+        setDrugList([]);
+      }
+    }
+    detchDrugList()
   }, [])
 
   const handleAddDrug = () => {
@@ -59,13 +61,16 @@ const Drugs = ({type}: {type : string}) => {
     setSelectedDrug(drug)
     setIsAddingDrug(true)
   }
-
-  const filteredDrugs = mockDrugs.filter((drug) =>
+  
+  const handleDispenseDrug = (drug: Drug) => {
+    setSelectedDrug(drug)
+    setIsDispensing(true)
+  }
+  
+  const filteredDrugs: DrugI[] | [] = drugList?.filter((drug) =>
     drug.name.toLowerCase().includes(search.toLowerCase()) && 
-    (type === 'all_drugs' || (type === 'in_stock' && drug.qty > 0))
-  );
-
-
+    (type === 'all_drugs' || (type === 'in_stock' && drug.quantity > 0))
+  ) || []
 
   return (
     <Container maxWidth="lg">
@@ -110,29 +115,40 @@ const Drugs = ({type}: {type : string}) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredDrugs.map((drug, index) => (
-              <TableRow key={drug.id}>
+            {filteredDrugs.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  No records found.
+                </TableCell>
+              </TableRow>
+            ): (
+              filteredDrugs.map((drug, index) => (
+              <TableRow key={drug._id}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{drug.name}</TableCell>
                 <TableCell>{drug.category}</TableCell>
                 <TableCell>{drug.price}</TableCell>
                 { type === 'all_drugs' && <TableCell>
-                  <AvailabilityChip quantity={drug.qty}/>
+                  <AvailabilityChip quantity={drug.quantity}/>
                 </TableCell>}
-                <TableCell>{drug.qty}</TableCell>
-                <TableCell>
-                  <div className="flex justify-between">
-                  <Button variant='contained' onClick={() => handleEditDrug(drug)}>Edit</Button>
-                  <Button variant='outlined' onClick={() => setIsDispensing(true)}>Dispense</Button>
-                  </div>
-                </TableCell>
+                <TableCell>{drug.quantity}</TableCell>
+                {
+                  type === 'all_drugs' &&
+                  <TableCell>
+                    <div className="flex justify-between">
+                    <Button variant='contained' onClick={() => handleEditDrug(drug)}>Edit</Button>
+                    <Button variant='outlined' onClick={() => handleDispenseDrug(drug)}>Dispense</Button>
+                    </div>
+                  </TableCell>
+                }
               </TableRow>
-            ))}
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
-    <DrugModal isVisible = {isAddingDrug} onClose = {setIsAddingDrug} drugToEdit={selectDrug}/>
-    <DispenseModal isVisible = {isDispensing} onClose = {setIsDispensing}/>
+    <DrugModal isVisible = {isAddingDrug} onClose = {setIsAddingDrug} drugToEdit={selectDrug} setDrugList={setDrugList}/>
+    <DispenseModal isVisible = {isDispensing} onClose = {setIsDispensing} drugToDispense={selectDrug} setDrugList={setDrugList}/>
     </Container>
   );
 };

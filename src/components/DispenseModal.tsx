@@ -2,16 +2,27 @@ import { useFormik } from "formik";
 import {dispenseSchema} from "../validation/Validation"
 import {Modal, Box} from "@mui/material";
 import {type DispenseModalProps} from "../types/type"
+import {dispenseDrug} from "../services/drugService"
 
-
-function DispenseModal({isVisible, onClose}: DispenseModalProps) {
+function DispenseModal({isVisible, onClose, drugToDispense, setDrugList}: DispenseModalProps) {
   const formik = useFormik({
     initialValues: {
       quantity: "", 
     },
     validationSchema: dispenseSchema,
-    onSubmit: (values) => {
+    onSubmit: async(values) => {
         console.log(values);
+        if (drugToDispense) {
+          const updatedData = await dispenseDrug(drugToDispense, Number(values.quantity))
+          if (setDrugList) {
+            setDrugList((prev) =>
+              prev ? prev.map((drug) =>
+                drug._id === updatedData.updatedDrug._id ? updatedData.updatedDrug : drug
+              )
+              : [updatedData.updatedDrug]
+            )
+          }
+        }
         onClose(false); 
         formik.resetForm(); 
     },
@@ -48,8 +59,8 @@ function DispenseModal({isVisible, onClose}: DispenseModalProps) {
             </label>
             <input
               type="number"
-              id="price"
-              name="price"
+              id="quantity"
+              name="quantity"
               value={formik.values.quantity}
               onChange={formik.handleChange}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"

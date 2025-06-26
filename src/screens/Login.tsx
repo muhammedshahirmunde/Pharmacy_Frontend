@@ -2,9 +2,12 @@ import { useNavigate } from "react-router";
 import {emailSchema} from "../validation/Validation"
 import { useFormik } from "formik";
 import { loginUser } from "../services/authService"
+import { useState } from "react";
 
 function Login() {
     const navigate = useNavigate()
+    const [errorMessage, setErrorMessage] = useState("");
+
     const formik = useFormik({
     initialValues: {
       email: "",
@@ -15,8 +18,11 @@ function Login() {
       const user = await loginUser(values.email, values.password )
       if(user) {
         localStorage.setItem('user', JSON.stringify(user));
+        navigate("/")
+      } else {
+        setErrorMessage("Login failed. Please check your credentials.");
       }
-      navigate("/")
+      
     },
   });
 
@@ -27,6 +33,9 @@ function Login() {
           Login Form
         </h2>
         <form className="max-w-sm mx-auto" onSubmit={formik.handleSubmit}>
+          {errorMessage && (
+            <p className="text-red-500 text-center mb-4">{errorMessage}</p>
+          )}
           <div className="mb-5">
             <label
               htmlFor="email"

@@ -21,11 +21,6 @@ export const addDrugSchema = yup.object().shape({
     .string()
     .required("Catagory is required"),
 
-  quantity: yup
-    .number()
-    .required("Quantity is required")
-    .min(1, "Quantity must be at least 1"),
-
   price: yup
     .number()
     .required("Price is required")
@@ -35,4 +30,28 @@ export const addDrugSchema = yup.object().shape({
     .number()
     .required("Low stock threshold is required")
     .min(1, "Threshold must be a non-negative number"),
+});
+
+export const editDrugSchema = yup.object().shape({
+  name: yup
+    .string()
+    .min(2, "Name must be at least 2 characters"),
+  
+  catagory: yup
+    .string(),
+
+  price: yup
+    .number()
+    .min(1, "Price must be a positive number"),
+
+  lowStockThreshold: yup
+    .number()
+    .min(1, "Threshold must be a non-negative number")
+});
+
+export const dispenseSchema = yup.object({
+  quantity: yup
+    .number()
+    .min(1, "Quantity must be at least 1")
+    .integer("Quantity must be a whole number"),
 });
